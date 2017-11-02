@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core">
+<h:head>
+    <title>Test</title>
+</h:head>
+
+<h:body>
+    <p:panel header="Previous Calculation">
+        <h:form>
+            <p:dataTable var="calculation" value="#{calculationBean.calculations}">
+                <p:column headerText="Id">
+                    <h:outputText value="#{calculation.id}"/>
+                </p:column>
+                <p:column headerText="Date">
+                    <h:outputText value="#{calculation.date}"/>
+                </p:column>
+                <p:column headerText="/">
+                    <p:commandLink update="@(.prev_expressions_table)"  id="ajax"
+                                   action="#{calculationBean.showExpressions(calculation)}">
+                        <h:outputText value="show"/>
+                    </p:commandLink>
+                </p:column>
+            </p:dataTable>
+        </h:form>
+
+        <br/>
+
+        <h:form>
+
+            <p:dataTable id="prev_expressions_table" styleClass="prev_expressions_table"
+                         var="expression" value="#{calculationBean.tmpCalculetion.expressions}">
+                <f:facet name="header">
+                    ##{calculationBean.tmpCalculetion.id}  #{calculationBean.tmpCalculetion.date}
+                </f:facet>
+                <p:column headerText="Expression">
+                    <h:outputText value="#{expression.expression}"/>
+                </p:column>
+                <p:column headerText="Result">
+                    <h:outputText value="#{expression.result.result}"/>
+                </p:column>
+            </p:dataTable>
+            <p:commandButton value="Cancel" ajax="false" action="#{calculationBean.cancel}"/>
+            <p:commandButton value="Delete" ajax="false" action="#{calculationBean.deleteCalculation()}"/>
+        </h:form>
+    </p:panel>
+
+
+    <br/>
+    <p:separator/>
+    <br/>
+
+    <p:panel id="basic" header="New Calculation" style="margin-bottom:20px">
+        <h:form id="fileUpoad" prependId="false" enctype="multipart/form-data">
+            <p:fileUpload id="fileIdUpload" value="#{fileUploadBean.uploadedFile}" mode="simple" skinSimple="true"/>
+            <p:commandButton value="Calculate" ajax="false" action="#{fileUploadBean.calculate}"/>
+        </h:form>
+
+        <br/>
+
+        <h:form>
+            <p:dataTable var="expression" value="#{fileUploadBean.tmpExpressions}">
+                <p:column headerText="Expression">
+                    <h:outputText value="#{expression.expression}"/>
+                </p:column>
+                <p:column headerText="Result">
+                    <h:outputText value="#{expression.result.result}"/>
+                </p:column>
+            </p:dataTable>
+            <p:commandButton value="Save calculation" action="#{fileUploadBean.saveCalculation}" ajax="false"/>
+        </h:form>
+    </p:panel>
+</h:body>
+</html>
